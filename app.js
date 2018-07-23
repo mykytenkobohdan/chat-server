@@ -9,6 +9,7 @@ var mongoose = require('mongoose');
 var indexRouter = require('./routes/index');
 var messagesRouter = require('./routes/messages');
 var usersRouter = require('./routes/users');
+var authRouter = require('./routes/authorize');
 
 var app = express();
 
@@ -40,6 +41,7 @@ mongoose.connect(connectionsString, {useNewUrlParser: true})
 app.use('/', indexRouter);
 app.use('/messages', messagesRouter);
 app.use('/users', usersRouter);
+app.use('/authorize', authRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
