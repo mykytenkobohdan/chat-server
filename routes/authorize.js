@@ -4,11 +4,7 @@ var User = require('../models/user');
 
 /* POST check authorize. */
 router.post('/', function (req, res, next) {
-    console.log(req.body);
-
     User.find({'username': req.body.username}, function (err, user) {
-        console.log(user.length);
-
         if (user.length > 0) {
             user[0].comparePassword(req.body.password, function (err, isMatch) {
                 if (err) return res.json({error: true, errorMessage: err.message});
