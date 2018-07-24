@@ -5,21 +5,25 @@ const SALT_WORK_FACTOR = 10;
 var Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    username: {
-        type: String,
-        required: true,
-        index: {unique: true}
+        username: {
+            type: String,
+            required: true,
+            index: {unique: true}
+        },
+        // nickname: String,
+        password: {
+            type: String,
+            required: true
+        },
+        email: {
+            type: mongoose.SchemaTypes.Email,
+            required: true
+        }
     },
-    // nickname: String,
-    password: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: mongoose.SchemaTypes.Email,
-        required: true
-    }
-});
+    {
+        // add for created_at and updated_at
+        timestamps: true
+    });
 
 userSchema.pre('save', function (next) {
     var user = this;
