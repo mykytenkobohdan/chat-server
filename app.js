@@ -31,7 +31,7 @@ var connectionsString = 'mongodb://test-user:qazwsx123@ds233541.mlab.com:33541/c
 
 mongoose.Promise = global.Promise;
 mongoose.connect(connectionsString, {useNewUrlParser: true})
-    .then(function (data) {
+    .then(function () {
         console.log('Successfully connected to database.');
     })
     .catch(function (err) {

@@ -49,6 +49,16 @@ userSchema.methods.comparePassword = function (candidatePassword, cb) {
     });
 };
 
+userSchema.methods.getRounds = function (password) {
+    if (!password) return '';
+    return bcrypt.getRounds(password);
+};
+
+userSchema.methods.encryptPassword = function (password) {
+    if (!password) return '';
+    return bcrypt.hashSync(password, SALT_WORK_FACTOR);
+};
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
