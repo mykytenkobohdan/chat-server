@@ -21,7 +21,12 @@ router.get('/:id', function (req, res, next) {
 /* POST create user. */
 router.post('/', function (req, res, next) {
     User.create(req.body, function (err, user) {
-        res.json({status: 200, message: 'User created!'});
+        if (err) {
+            console.log(err);
+            return res.json({error: true, errorMessage: err.message})
+        }
+
+        return res.json({status: 200, message: 'User created!'});
     });
 });
 
