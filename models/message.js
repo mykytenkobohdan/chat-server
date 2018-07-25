@@ -6,7 +6,7 @@ const messageSchema = new Schema({
         type: String,
         required: true
     },
-    userId: mongoose.Schema.Types.ObjectId,
+    userId: Schema.Types.ObjectId,
     message: {
         type: String,
         required: true
