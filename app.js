@@ -72,12 +72,23 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+var io = require('socket.io')(server);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
 server.listen(port);
+
+/**
+ *  Socket connection.
+ */
+io.on('connection', function (socket) {
+    socket.emit('news', {hello: 'world'});
+    socket.on('my other event', function (data) {
+        console.log(data);
+    });
+});
 
 /**
  * Normalize a port into a number, string, or false.
