@@ -13,6 +13,26 @@ var authRouter = require('./routes/authorize');
 
 var app = express();
 
+// Add headers
+app.use(function (req, res, next) {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    // Pass to next layer of middleware
+    next();
+});
+
 // view engine setup
 // remove views because our server use only like rest api
 app.set('views', path.join(__dirname, 'views'));
@@ -73,21 +93,28 @@ app.set('port', port);
 
 var server = http.createServer(app);
 var io = require('socket.io')(server);
-
+// next line is the money
+app.set('socketio', io);
 /**
  * Listen on provided port, on all network interfaces.
  */
 
 server.listen(port);
 
+// app.use(function (req, res, next) {
+//     req.io = io;
+//     next();
+// });
+
 /**
  *  Socket connection.
  */
 io.on('connection', function (socket) {
-    socket.emit('message', {hello: 'world'});
+    console.log('socket connected');
 
     socket.on('message', function (data) {
-        console.log('on message', data);
+        console.log('on message', data.message);
+        socket.emit('message', data);
     });
 
     socket.on('disconnect', function () {
