@@ -84,9 +84,14 @@ server.listen(port);
  *  Socket connection.
  */
 io.on('connection', function (socket) {
-    socket.emit('news', {hello: 'world'});
-    socket.on('my other event', function (data) {
-        console.log(data);
+    socket.emit('message', {hello: 'world'});
+
+    socket.on('message', function (data) {
+        console.log('on message', data);
+    });
+
+    socket.on('disconnect', function () {
+        console.log('socket disconnected!');
     });
 });
 
