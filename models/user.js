@@ -1,8 +1,9 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
-require('mongoose-type-email');
-const SALT_WORK_FACTOR = 10;
+var sanitizerPlugin = require('mongoose-sanitizer');
 var Schema = mongoose.Schema;
+const SALT_WORK_FACTOR = 10;
+require('mongoose-type-email');
 
 const userSchema = new Schema({
         username: {
@@ -62,6 +63,8 @@ userSchema.methods.encryptPassword = function (password) {
     if (!password) return '';
     return bcrypt.hashSync(password, SALT_WORK_FACTOR);
 };
+
+userSchema.plugin(sanitizerPlugin);
 
 const User = mongoose.model('User', userSchema);
 

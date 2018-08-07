@@ -21,4 +21,19 @@ router.post('/', function (req, res, next) {
     });
 });
 
+/* PUT update message */
+router.put('/', function (req, res, next) {
+    Message.findById(req.body._id, function (err, message) {
+        message.isUpdated = true;
+        message.message = req.body.message;
+
+        message.save(function (err, updatedMessage) {
+            var io = req.app.get('socketio');
+            io.emit('update-message', message);
+            // if (err) return handleError(err);
+            res.json({status: 200, message: 'Message updated!', data: updatedMessage});
+        });
+    });
+});
+
 module.exports = router;
