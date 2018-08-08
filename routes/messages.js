@@ -7,7 +7,8 @@ router.get('/', function (req, res, next) {
     Message.find({}, function (err, messages) {
         messages.forEach(function (item) {
             if (item.isRemoved) {;
-                delete item.message;
+                // delete item['message'];
+                item['message'] = undefined;
             }
         });
 
