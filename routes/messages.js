@@ -5,6 +5,12 @@ var router = express.Router();
 /* GET get all messages. */
 router.get('/', function (req, res, next) {
     Message.find({}, function (err, messages) {
+        messages.forEach(function (item) {
+            if (item.isRemoved) {;
+                delete item.message;
+            }
+        });
+
         res.json(messages);
     });
 });
@@ -16,7 +22,6 @@ router.post('/', function (req, res, next) {
 
         var io = req.app.get('socketio');
         io.emit('message', message);
-        // req.io.emit('message', message);
         return res.json({status: 200, message: 'Message created!'});
     });
 });
@@ -29,11 +34,32 @@ router.put('/', function (req, res, next) {
 
         message.save(function (err, updatedMessage) {
             var io = req.app.get('socketio');
+
             io.emit('update-message', message);
-            // if (err) return handleError(err);
+            if (err) return handleError(err);
             res.json({status: 200, message: 'Message updated!', data: updatedMessage});
         });
     });
 });
+
+/* DELETE remove message */
+router.delete('/', function (req, res, next) {
+    Message.findById(req.query.id, function (err, message) {
+        message.isRemoved = true;
+        message.save(function (err, ms) {
+            delete ms.message;
+
+            var io = req.app.get('socketio');
+            io.emit('remove-message', ms);
+            if (err) return handleError(err);
+            res.json({status: 200, message: 'Message removed!'});
+        });
+    });
+});
+
+function handleError(err) {
+    console.log(err);
+    return err;
+}
 
 module.exports = router;
