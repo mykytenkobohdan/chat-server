@@ -1,10 +1,14 @@
+var Message = require('./models/message');
+
 module.exports = function (io) {
     return io.on('connection', function (socket) {
         console.log('socket connected');
 
         socket.on('message', function (data) {
-            console.log('on message', data.message);
-            socket.emit('message', data);
+            Message.create(data, function (err, message) {
+                if (err) return err;
+                socket.emit('message', data);
+            });
         });
 
         socket.on('update-message', function (data) {
