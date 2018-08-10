@@ -1,4 +1,4 @@
-var Message = require('./models/message');
+var Message = require('../models/message');
 
 module.exports = function (io) {
     return io.on('connection', function (socket) {
@@ -7,13 +7,21 @@ module.exports = function (io) {
         socket.on('message', function (data) {
             Message.create(data, function (err, message) {
                 if (err) return err;
-                socket.emit('message', data);
+                socket.emit('message', message);
             });
         });
 
         socket.on('update-message', function (data) {
-            console.log('update message', data.message);
-            socket.emit('update-message', data);
+            Message.findById(data._id, function (err, message) {
+                message.isUpdated = true;
+                message.message = data.message;
+        
+                message.save(function (err, updatedMessage) {
+                    if (err) console.log(err);
+
+                    socket.emit('update-message', updatedMessage);
+                });
+            });
         });
 
         socket.on('disconnect', function () {

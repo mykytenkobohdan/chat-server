@@ -18,21 +18,21 @@ app.use(compression());
 // Add headers
 app.use(function (req, res, next) {
 
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+  // Website you wish to allow to connect
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
 
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  // Request methods you wish to allow
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  // Request headers you wish to allow
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
 
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
+  // Set to true if you need the website to include cookies in the requests sent
+  // to the API (e.g. in case you use sessions)
+  res.setHeader('Access-Control-Allow-Credentials', true);
 
-    // Pass to next layer of middleware
-    next();
+  // Pass to next layer of middleware
+  next();
 });
 
 // view engine setup
@@ -43,7 +43,7 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({
-    extended: false
+  extended: false
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -52,13 +52,15 @@ var connectionsString = 'mongodb://test-user:qazwsx123@ds233541.mlab.com:33541/c
 // var connectionsString = 'mongo://' + process.env.IP + ':27017/chat';
 
 mongoose.Promise = global.Promise;
-mongoose.connect(connectionsString, {useNewUrlParser: true})
-    .then(function () {
-        console.log('Successfully connected to database.');
-    })
-    .catch(function (err) {
-        console.log(err);
-    });
+mongoose.connect(connectionsString, {
+    useNewUrlParser: true
+  })
+  .then(function () {
+    console.log('Successfully connected to database.');
+  })
+  .catch(function (err) {
+    console.log(err);
+  });
 
 app.use('/', indexRouter);
 app.use('/messages', messagesRouter);
@@ -67,18 +69,18 @@ app.use('/authorize', authRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-    next(createError(404));
+  next(createError(404));
 });
 
 // error handler
 app.use(function (err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
 });
 
 /**
@@ -95,8 +97,9 @@ app.set('port', port);
 
 var server = http.createServer(app);
 var io = require('socket.io')(server);
-// next line is the money
+// var io = req.app.get('socketio'); io.emit('update-message', message); For emit in routs.
 app.set('socketio', io);
+
 /**
  * Listen on provided port, on all network interfaces.
  */
@@ -107,26 +110,26 @@ server.listen(port);
  *  Socket connection.
  */
 
-require('./socket')(io);
+require('./controllers/socket')(io);
 
 /**
  * Normalize a port into a number, string, or false.
  */
 
 function normalizePort(val) {
-    var port = parseInt(val, 10);
+  var port = parseInt(val, 10);
 
-    if (isNaN(port)) {
-        // named pipe
-        return val;
-    }
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
 
-    if (port >= 0) {
-        // port number
-        return port;
-    }
+  if (port >= 0) {
+    // port number
+    return port;
+  }
 
-    return false;
+  return false;
 }
 
 module.exports = app;
