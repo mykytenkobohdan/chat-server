@@ -49,7 +49,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 var connectionsString = 'mongodb://test-user:qazwsx123@ds233541.mlab.com:33541/chat-db';
-// var connectionsString = 'mongo://' + process.env.IP + ':27017/chat';
+// var connectionsString = 'mongodb://localhost:27017/chat-db';
+// var connectionsString = 'mongo://' + process.env.IP + ':27017/chat-db';
 
 mongoose.Promise = global.Promise;
 mongoose.connect(connectionsString, {
