@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var http = require('http');
 var mongoose = require('mongoose');
+require('dotenv').config();
 
 var indexRouter = require('./routes/index');
 var messagesRouter = require('./routes/messages');
@@ -48,9 +49,8 @@ app.use(express.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-var connectionsString = 'mongodb://test-user:qazwsx123@ds233541.mlab.com:33541/chat-db';
+var connectionsString = 'mongodb://' + process.env.DB_USER + ':' + process.env.DB_PASS + '@ds233541.mlab.com:33541/chat-db';
 // var connectionsString = 'mongodb://localhost:27017/chat-db';
-// var connectionsString = 'mongo://' + process.env.IP + ':27017/chat-db';
 
 mongoose.Promise = global.Promise;
 mongoose.connect(connectionsString, {
