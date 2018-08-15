@@ -45,22 +45,28 @@ router.put('/', function (req, res, next) {
     }
 
     var isNewName = user.username !== req.body.username;
+
     user.email = req.body.email;
+    user.username = req.body.username;
 
-    user.save(function (err, u) {
-      if (err) return res.json(err);
+    user.save()
+      .then(function (u) {
+        res.json(u);
+      }, function (err) {
+        return res.json(err);
+      });
 
-      if (isNewName) {
-        Message.find({
-          userId: user._id
-        }, function (err, messages) {
-          if (err) return res.json(err);
-          console.log(messages);
-        });
-      }
-
-      res.json(u);
-    });
+    if (isNewName) {
+      Message.update({
+        userId: user._id
+      }, {
+        username: req.body.username
+      }, {
+        multi: true
+      }, function (err, data) {
+        console.log('updated all!')
+      });
+    }
   });
 });
 
