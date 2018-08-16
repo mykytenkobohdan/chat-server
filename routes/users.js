@@ -70,4 +70,22 @@ router.put('/', function (req, res, next) {
     });
 });
 
+router.post('/check-pass', function (req, res, next) {
+  User.findById(req.body.userId)
+    .then(function (user) {
+      user.comparePassword(req.body.newPassword, function (err, isMatch) {
+        if (err) return res.json({
+          error: true,
+          errorMessage: err.message
+        });
+
+        isMatch ? res.json(null) : res.json({
+          currentPassword: {
+            valid: false
+          }
+        });
+      });
+    });
+});
+
 module.exports = router;
