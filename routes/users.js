@@ -44,6 +44,10 @@ router.put('/', function (req, res, next) {
       user.email = req.body.email;
       user.username = req.body.username;
 
+      if (user.password !== req.body.password) {
+        user.password = req.body.password
+      }
+
       user.save()
         .then(function (u) {
           res.json(u);
